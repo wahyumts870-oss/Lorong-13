@@ -1,0 +1,792 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="description" content="Lorong 13 adalah game horor misteri tentang rumah sakit terbengkalai. Temukan dokumen rahasia, pecahkan misteri, dan temukan jalan keluar.">
+<meta name="author" content="Studio Malam">
+<meta name="theme-color" content="#18211e">
+<meta name="color-scheme" content="dark">
+<meta name="format-detection" content="telephone=no">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Lorong 13">
+<meta name="mobile-web-app-capable" content="yes">
+<meta property="og:type" content="game">
+<meta property="og:title" content="Lorong 13 — Jangan Menoleh">
+<meta property="og:description" content="Game horor misteri rumah sakit terbengkalai.">
+<meta property="og:locale" content="id_ID">
+<meta property="og:site_name" content="Studio Malam">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Lorong 13">
+<meta name="twitter:description" content="Jangan menoleh ketika lampu mulai berkedip.">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' fill='%2318211e'/%3E%3Ctext x='50' y='70' font-size='64' text-anchor='middle' fill='%23b64c43'%3E13%3C/text%3E%3C/svg%3E">
+<title>Lorong 13 — Jangan Menoleh</title>
+
+<style>
+:root {
+ --bg:oklch(17% .025 160);
+ --panel:oklch(22% .025 160);
+ --accent:oklch(58% .13 30);
+ --paper:oklch(84% .035 85);
+ --muted:oklch(68% .025 90);
+ --line:oklch(36% .025 160);
+}
+* {box-sizing:border-box}
+html,body {
+ margin:0;width:100%;height:100%;
+ background:var(--bg);color:var(--paper);
+ font-family:"Trebuchet MS",sans-serif;
+ overscroll-behavior:none;
+ -webkit-text-size-adjust:100%;
+}
+body {
+ min-height:100vh;min-height:100dvh;
+ overflow:hidden;
+ user-select:none;-webkit-user-select:none;
+ -webkit-touch-callout:none;
+ -webkit-tap-highlight-color:transparent;
+}
+button {font:inherit; touch-action: manipulation;}
+button:focus-visible {
+ outline:3px solid var(--paper);outline-offset:4px;
+}
+#app {
+ width:100%;height:100%;
+ min-height:100vh;min-height:100dvh;
+ display:flex;flex-direction:column;
+ padding:env(safe-area-inset-top) 16px env(safe-area-inset-bottom);
+}
+header {
+ min-height:66px;display:flex;align-items:center;
+ justify-content:space-between;gap:12px;
+ border-bottom:1px solid var(--line);
+}
+.brand {font-family:Georgia,serif;font-size:23px;letter-spacing:2px}
+.brand span {color:var(--accent)}
+.status {font-size:12px;color:var(--muted);text-align:right}
+main {
+ flex:1;min-height:0;display:flex;align-items:center;
+ justify-content:center;padding:16px 0;
+}
+.screen {
+ width:min(100%,920px);max-height:100%;
+ overflow:auto;
+}
+.hidden {display:none!important}
+.menu {
+ display:grid;grid-template-columns:1.2fr .8fr;
+ gap:32px;align-items:center;
+}
+.poster {
+ min-height:380px;background:
+ linear-gradient(90deg,rgba(12,20,17,.8),rgba(12,20,17,.18)),
+ repeating-linear-gradient(0deg,transparent 0 40px,rgba(220,210,180,.06) 41px 42px),
+ #202a25;
+ border:1px solid var(--line);
+ display:flex;flex-direction:column;justify-content:flex-end;
+ padding:32px;position:relative;overflow:hidden;
+}
+.poster:before {
+ content:"";position:absolute;
+ top:0;right:14%;width:30%;height:100%;
+ background:linear-gradient(90deg,#141d19,#344139,#141d19);
+ clip-path:polygon(25% 0,75% 0,100% 100%,0 100%);
+ opacity:.7;
+}
+.poster:after {
+ content:"";position:absolute;inset:0;pointer-events:none;
+ background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 180 180' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.8' numOctaves='3'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.14'/%3E%3C/svg%3E");
+ opacity:.23;
+}
+.poster>* {position:relative;z-index:1}
+.eyebrow {
+ font-size:11px;letter-spacing:4px;color:var(--accent);
+ text-transform:uppercase;
+}
+h1 {
+ font:clamp(48px,8vw,82px)/.95 Georgia,serif;
+ letter-spacing:-3px;margin:14px 0;
+}
+h2 {font:30px Georgia,serif;margin:0 0 12px}
+p {line-height:1.65;color:var(--muted)}
+.actions {display:grid;gap:10px;margin-top:24px}
+.btn {
+ min-height:48px;padding:12px 18px;
+ border:1px solid var(--line);
+ background:var(--panel);color:var(--paper);
+ cursor:pointer;text-align:left;
+ transition:background .15s,border-color .15s;
+}
+.btn:hover {background:#344039;border-color:var(--paper)}
+.btn:active {transform:translateY(1px)}
+.btn.primary {background:#8c3f37;border-color:#b65b50}
+.btn.primary:hover {background:#a34c42}
+.btn:disabled {opacity:.4;cursor:not-allowed}
+.note {font-size:12px;color:var(--muted)}
+.panel {
+ background:var(--panel);border:1px solid var(--line);
+ padding:24px;
+}
+.setting {
+ display:flex;justify-content:space-between;
+ align-items:center;gap:12px;
+ padding:14px 0;border-bottom:1px solid var(--line);
+}
+select,input {background:#101914;color:var(--paper);
+ border:1px solid var(--line);padding:10px;
+ font-size:16px;max-width:100%}
+#gameScreen {
+ width:min(100%,1000px);
+ display:flex;flex-direction:column;gap:12px;
+}
+.hud {
+ display:flex;justify-content:space-between;
+ flex-wrap:wrap;gap:10px;font-size:13px;
+}
+.hud strong {color:var(--paper)}
+.game-frame {
+ position:relative;width:100%;min-height:0;
+ background:#0b110e;border:1px solid var(--line);
+ overflow:hidden;
+}
+canvas {
+ display:block;width:100%;height:auto;
+ aspect-ratio:16/9;max-height:60dvh;
+ object-fit:contain;
+ touch-action:none;
+ user-select:none;-webkit-user-select:none;
+ -webkit-touch-callout:none;-webkit-user-drag:none;
+}
+.game-footer {
+ display:flex;align-items:center;justify-content:space-between;
+ gap:12px;flex-wrap:wrap;
+}
+.control-pad {
+ display:grid;grid-template-columns:repeat(3,48px);
+ grid-template-rows:repeat(2,48px);gap:4px;
+}
+.control-pad button {
+ background:#29352e;border:1px solid var(--line);
+ color:var(--paper);font-size:19px;
+ min-width:48px;min-height:48px;
+ touch-action:none;
+}
+.control-pad button:active {background:var(--accent)}
+.control-pad .up {grid-column:2}
+.control-pad .left {grid-column:1;grid-row:2}
+.control-pad .down {grid-column:2;grid-row:2}
+.control-pad .right {grid-column:3;grid-row:2}
+.game-actions {display:flex;gap:8px;flex-wrap:wrap}
+.small {min-height:44px;font-size:13px;padding:8px 12px}
+.overlay {
+ position:fixed;inset:0;z-index:10;
+ display:flex;align-items:center;justify-content:center;
+ background:rgba(8,13,10,.94);
+ padding:20px;
+}
+.dialog {
+ width:min(100%,430px);background:var(--panel);
+ border:1px solid var(--line);padding:30px;
+}
+.dialog h2 {font-size:34px}
+#message {
+ position:absolute;bottom:12px;left:50%;
+ transform:translateX(-50%);
+ background:#19231e;border:1px solid var(--line);
+ padding:10px 16px;width:max-content;
+ max-width:90%;text-align:center;
+ font-size:13px;pointer-events:none;
+}
+footer {
+ padding:10px 0;text-align:center;
+ color:var(--muted);font-size:11px;
+ border-top:1px solid var(--line);
+}
+@media(max-width:700px) {
+ .menu {grid-template-columns:1fr;gap:16px}
+ .poster {min-height:240px;padding:22px}
+ h1 {font-size:58px}
+ .menu .panel {padding:18px}
+ canvas {aspect-ratio:4/3;max-height:48dvh}
+ #app {padding-left:12px;padding-right:12px}
+}
+@media(max-width:380px) {
+ .brand {font-size:19px}
+ .status {font-size:10px}
+ .poster {min-height:210px}
+ canvas {max-height:43dvh}
+}
+@media(orientation:landscape) and (max-height:500px) {
+ header {min-height:44px}
+ main {padding:6px 0}
+ canvas {max-height:52dvh}
+ footer {display:none}
+}
+@media(prefers-reduced-motion:reduce) {
+ *,*:before,*:after {
+  animation:none!important;transition:none!important;
+  scroll-behavior:auto!important;
+ }
+}
+</style>
+</head>
+<body>
+<div id="app">
+<header>
+ <div class="brand">LORONG <span>13</span></div>
+ <div class="status" id="topStatus">ARSIP RUMAH SAKIT · 1998</div>
+</header>
+
+<main>
+<section class="screen menu" id="menuScreen">
+ <div class="poster">
+  <div class="eyebrow">Catatan penjaga malam · 02:13</div>
+  <h1>JANGAN<br>MEN0LEH.</h1>
+  <p>Rumah sakit ini sudah ditutup selama dua puluh tahun. Namun malam ini, seseorang menyalakan lampu di lantai tiga.</p>
+ </div>
+ <div class="panel">
+  <div class="eyebrow">Laporan kejadian nomor 013</div>
+  <h2>Shift Terakhir</h2>
+  <p>Kamu terbangun di ruang arsip. Pintu utama terkunci. Tiga dokumen tersembunyi di seluruh bangunan. Temukan semuanya dan cari kartu akses.</p>
+  <div class="actions">
+   <button class="btn primary" id="startBtn">▶ MULAI BERMAIN</button>
+   <button class="btn" id="howBtn">CARA BERMAIN</button>
+   <button class="btn" id="settingsBtn">PENGATURAN</button>
+   <button class="btn" id="continueBtn">LANJUTKAN SIMPANAN</button>
+  </div>
+  <p class="note">Eksplorasi · Misteri · Puzzle · Tanpa kekerasan grafis</p>
+ </div>
+</section>
+
+<section class="screen hidden" id="gameScreen">
+ <div class="hud" aria-live="polite">
+  <span>ARSIP: <strong id="docCount">0/3</strong></span>
+  <span>WAKTU: <strong id="clock">05:00</strong></span>
+  <span>LOKASI: <strong id="location">RUANG ARSIP</strong></span>
+  <span>STATUS: <strong id="gameStatus">MENJELAJAH</strong></span>
+ </div>
+ <div class="game-frame">
+  <canvas id="gameCanvas" width="960" height="540" draggable="false" aria-label="Peta rumah sakit. Gunakan tombol arah untuk bergerak."></canvas>
+  <div id="message" role="status" aria-live="polite">Temukan dokumen yang tersembunyi.</div>
+ </div>
+ <div class="game-footer">
+  <div class="control-pad" aria-label="Kontrol gerakan">
+   <button class="up" data-dir="up" aria-label="Bergerak ke atas">↑</button>
+   <button class="left" data-dir="left" aria-label="Bergerak ke kiri">←</button>
+   <button class="down" data-dir="down" aria-label="Bergerak ke bawah">↓</button>
+   <button class="right" data-dir="right" aria-label="Bergerak ke kanan">→</button>
+  </div>
+  <div class="game-actions">
+   <button class="btn small" id="interactBtn">PERIKSA</button>
+   <button class="btn small" id="pauseBtn">PAUSE</button>
+   <button class="btn small" id="fullBtn">⛶ LAYAR PENUH</button>
+  </div>
+ </div>
+ <p class="note">WASD / tombol panah untuk bergerak · E / Enter untuk memeriksa · P / Esc untuk jeda</p>
+</section>
+</main>
+
+<footer>STUDIO MALAM · BERKAS RAHASIA 013 · SEMUA CATATAN FIKTIF</footer>
+</div>
+
+<div class="overlay hidden" id="modal">
+ <div class="dialog" id="dialogContent"></div>
+</div>
+<div id="errorBanner" class="overlay hidden" role="alert">
+ <div class="dialog">
+  <h2>Permainan berhenti</h2>
+  <p id="errorText">Terjadi masalah saat menjalankan permainan.</p>
+  <button class="btn primary" id="errorReload">Kembali ke menu</button>
+ </div>
+</div>
+
+<script>
+(() => {
+"use strict";
+const $ = id => document.getElementById(id);
+const canvas = $("gameCanvas");
+const ctx = canvas.getContext("2d");
+if (!ctx) {
+ $("errorText").textContent="Browser tidak menyediakan Canvas 2D. Coba buka dengan Chrome atau Firefox.";
+ $("errorBanner").classList.remove("hidden");
+ return;
+}
+
+const TILE=60, COLS=16, ROWS=9;
+let MAX_TIME=300; // FIX: Diubah dari const ke let agar bisa diubah sesuai difficulty
+const MAP=[
+ [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
+ [1,0,0,0,0,0,1,0,0,0,0,0,0,0,0,1],
+ [1,0,1,1,1,0,1,0,1,1,1,1,1,1,0,1],
+ [1,0,0,0,1,0,0,0,0,0,0,0,0,1,0,1],
+ [1,1,1,0,1,1,1,1,1,1,1,0,0,1,0,1],
+ [1,0,0,0,0,0,0,0,0,0,1,0,1,1,0,1],
+ [1,0,1,1,1,1,1,1,1,0,1,0,0,0,0,1],
+ [1,0,0,0,0,0,0,0,0,0,0,0,1,0,0,1],
+ [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1]
+];
+const DEFAULTS={version:1,onboarded:false,music:false,sfx:true,difficulty:"normal",best:0};
+let settings={...DEFAULTS};
+let game=null, raf=0,last=0,resizeTimer=0,wakeLock=null;
+let audio=null,muted=false;
+let keys={up:false,down:false,left:false,right:false};
+let pointerIds=new Map();
+let state="menu",messageTimer=0,started=false;
+const saveKey="lorong13_state_v1";
+
+function loadData(){
+ try{
+  const raw=localStorage.getItem(saveKey);
+  if(!raw)return;
+  const data=JSON.parse(raw);
+  if(data&&data.version===1) settings={...DEFAULTS,...data};
+ }catch(e){settings={...DEFAULTS};}
+ 
+ // FIX: Set MAX_TIME berdasarkan difficulty saat load
+ if(settings.difficulty==="easy") MAX_TIME=420;
+ else MAX_TIME=300;
+}
+function saveData(){
+ try{localStorage.setItem(saveKey,JSON.stringify(settings));}
+ catch(e){say("Penyimpanan penuh. Hapus data lama melalui Pengaturan.");}
+}
+function sound(freq=180,duration=.1,type="sine"){
+ if(!settings.sfx||document.hidden)return;
+ try{
+  if(!audio)audio=new (window.AudioContext||window.webkitAudioContext)();
+  if(audio.state==="suspended")audio.resume();
+  const osc=audio.createOscillator(),gain=audio.createGain();
+  osc.type=type;osc.frequency.value=freq;
+  gain.gain.setValueAtTime(.045,audio.currentTime);
+  gain.gain.exponentialRampToValueAtTime(.001,audio.currentTime+duration);
+  osc.connect(gain);gain.connect(audio.destination);
+  osc.start();osc.stop(audio.currentTime+duration);
+ }catch(e){}
+}
+function say(text){
+ $("message").textContent=text;
+ clearTimeout(messageTimer);
+ messageTimer=setTimeout(()=>{$("message").textContent="Gunakan tombol arah untuk menjelajah.";},3500);
+}
+function validTile(x,y){return MAP[y]&&MAP[y][x]===0;}
+function blocked(x,y){return !validTile(x,y);}
+function nearestWalkable(x,y){
+ if(validTile(x,y))return {x,y};
+ for(let r=1;r<Math.max(COLS,ROWS);r++)
+  for(let yy=0;yy<ROWS;yy++)
+   for(let xx=0;xx<COLS;xx++)
+    if(Math.abs(xx-x)+Math.abs(yy-y)<=r&&validTile(xx,yy))return {x:xx,y:yy};
+ return {x:1,y:1};
+}
+function initGame(){
+ const spawn=nearestWalkable(1,1);
+ if(!validTile(spawn.x,spawn.y))throw new Error("Titik awal tidak dapat ditemukan.");
+ if(!validTile(spawn.x+1,spawn.y)||!validTile(spawn.x,spawn.y+1))
+  throw new Error("Area awal tidak memiliki jalur aman.");
+ game={
+  x:spawn.x,y:spawn.y,dir:"down",
+  docs:[],key:false,time:MAX_TIME, // FIX: Menggunakan MAX_TIME yang dinamis
+  steps:0,flash:0,finished:false
+ };
+ const candidates=[
+  {x:5,y:5,id:"doc1",kind:"doc",name:"Laporan Pasien 07"},
+  {x:12,y:3,id:"doc2",kind:"doc",name:"Catatan Perawat"}, // FIX: x dari 13 ke 12 agar tidak menempel dinding
+  {x:3,y:7,id:"doc3",kind:"doc",name:"Rekaman Malam"},
+  {x:14,y:7,id:"key",kind:"key",name:"Kartu Akses"}
+ ];
+ game.items=candidates.filter(i=>validTile(i.x,i.y));
+ game.items.forEach(i=>{if(blocked(i.x,i.y))throw new Error("Item berada di dinding.");});
+ game.startedAt=performance.now();
+}
+function setState(next){
+ state=next;
+ $("menuScreen").classList.toggle("hidden",next!=="menu");
+ $("gameScreen").classList.toggle("hidden",!["playing","paused"].includes(next));
+ if(next==="playing"){last=performance.now();startLoop();requestWake();}
+ else {stopLoop();releaseWake();}
+}
+function startLoop(){
+ if(raf)return;
+ last=performance.now();
+ raf=requestAnimationFrame(loop);
+}
+function stopLoop(){if(raf)cancelAnimationFrame(raf);raf=0;}
+function loop(now){
+ raf=0;
+ if(state!=="playing")return;
+ const dt=Math.min((now-last)/1000,.05);
+ last=now;
+ update(dt);
+ render();
+ if(state==="playing")raf=requestAnimationFrame(loop);
+}
+function update(dt){
+ if(!game||game.finished)return;
+ game.time-=dt;
+ if(game.time<=0){game.time=0;endGame(false);return;}
+ game.flash=Math.max(0,game.flash-dt);
+ if(game.steps>0)game.steps=Math.max(0,game.steps-dt*3);
+ $("clock").textContent=formatTime(game.time);
+}
+function formatTime(t){
+ const n=Math.ceil(t);
+ return String(Math.floor(n/60)).padStart(2,"0")+":"+String(n%60).padStart(2,"0");
+}
+function render(){
+ if(!game)return;
+ // FIX: Gunakan dimensi map logis (COLS*TILE) bukan canvas.width mentah
+ const w = COLS * TILE;
+ const h = ROWS * TILE;
+ 
+ ctx.fillStyle="#101713";ctx.fillRect(0,0,w,h);
+ for(let y=0;y<ROWS;y++)for(let x=0;x<COLS;x++){
+  const px=x*TILE,py=y*TILE;
+  ctx.fillStyle=MAP[y][x]?"#29342e":"#18221c";
+  ctx.fillRect(px,py,TILE-2,TILE-2);
+  if(!MAP[y][x]){
+   ctx.strokeStyle="rgba(205,200,170,.035)";
+   ctx.strokeRect(px+3,py+3,TILE-8,TILE-8);
+  }else{
+   ctx.fillStyle="#39443d";
+   ctx.fillRect(px+4,py+4,TILE-10,4);
+  }
+ }
+ // Area pintu keluar
+ ctx.fillStyle=game.key&&game.docs.length===3?"#a34c42":"#665b43";
+ ctx.fillRect(14*TILE+13,1*TILE+13,34,34);
+ ctx.fillStyle="#e3d4af";ctx.font="bold 15px Georgia";
+ ctx.fillText("E",14*TILE+25,1*TILE+36);
+ for(const item of game.items){
+  if(item.taken)continue;
+  ctx.fillStyle=item.kind==="key"?"#d0b46c":"#c6bfa6";
+  ctx.fillRect(item.x*TILE+19,item.y*TILE+18,22,25);
+  ctx.fillStyle="#26332a";ctx.fillRect(item.x*TILE+23,item.y*TILE+23,14,3);
+ }
+ // Pemain
+ ctx.fillStyle="#c5c6a8";
+ ctx.beginPath();ctx.arc(game.x*TILE+30,game.y*TILE+30,13,0,Math.PI*2);ctx.fill();
+ ctx.fillStyle="#8f453d";
+ ctx.beginPath();ctx.arc(game.x*TILE+30,game.y*TILE+30,5,0,Math.PI*2);ctx.fill();
+ // Pencahayaan berbentuk lingkaran
+ const px=game.x*TILE+30,py=game.y*TILE+30;
+ ctx.save();ctx.globalCompositeOperation="destination-in";
+ const g=ctx.createRadialGradient(px,py,35,px,py,260);
+ g.addColorStop(0,"rgba(255,255,255,1)");
+ g.addColorStop(.6,"rgba(255,255,255,.8)");
+ g.addColorStop(1,"rgba(255,255,255,.12)");
+ ctx.fillStyle=g;ctx.fillRect(0,0,w,h);ctx.restore();
+ ctx.fillStyle="rgba(7,12,9,.30)";ctx.fillRect(0,0,w,h);
+ if(game.flash>0){
+  ctx.fillStyle="rgba(180,60,45,"+(game.flash*.4)+")";
+  ctx.fillRect(0,0,w,h);
+ }
+ $("docCount").textContent=game.docs.length+"/3";
+ $("location").textContent=game.y<3?"LORONG UTARA":game.y>5?"LORONG SELATAN":"RUANG TENGAH";
+}
+function move(dir){
+ if(state!=="playing"||!game)return;
+ const d={up:[0,-1],down:[0,1],left:[-1,0],right:[1,0]}[dir];
+ if(!d)return;
+ game.dir=dir;
+ const nx=game.x+d[0],ny=game.y+d[1];
+ if(blocked(nx,ny)){sound(90,.05);return;}
+ game.x=nx;game.y=ny;game.steps++;
+ sound(130,.035,"triangle");
+ if(navigator.vibrate)navigator.vibrate(8);
+ checkItems();
+ render();
+}
+function checkItems(){
+ for(const item of game.items){
+  if(item.taken||item.x!==game.x||item.y!==game.y)continue;
+  item.taken=true;
+  if(item.kind==="doc"){
+   game.docs.push(item.id);
+   // FIX: Teks dokumen disesuaikan dengan ID, bukan urutan array
+   const texts={
+    "doc1": "Laporan: pasien nomor 07 mengaku mendengar langkah di lorong kosong.",
+    "doc2": "Catatan: seluruh lampu lantai tiga menyala pada pukul 02:13.",
+    "doc3": "Rekaman: penjaga malam sebelumnya tidak pernah tercatat keluar."
+   };
+   say(texts[item.id] || "Dokumen ditemukan.");
+   sound(520,.2);
+  }else{
+   game.key=true;say("Kartu akses ditemukan. Pintu utama berada di ujung lorong utara.");
+   sound(700,.2);
+  }
+  saveProgress();
+ }
+}
+function interact(){
+ if(state!=="playing")return;
+ if(game.x===14&&game.y===1){
+  if(game.docs.length<3){say("Masih ada "+(3-game.docs.length)+" dokumen yang belum ditemukan.");return;}
+  if(!game.key){say("Pintu memerlukan kartu akses.");return;}
+  endGame(true);return;
+ }
+ const nearby=game.items.find(i=>!i.taken&&Math.abs(i.x-game.x)+Math.abs(i.y-game.y)<=1);
+ if(nearby)say("Ada sesuatu di dekatmu. Dekati untuk mengambilnya.");
+ else say("Tidak ada yang bisa diperiksa di sini.");
+}
+function saveProgress(){
+ try{
+  settings.save={
+   x:game.x,y:game.y,docs:game.docs,
+   key:game.key,time:game.time,
+   items:game.items.map(i=>({id:i.id,taken:i.taken}))
+  };
+  saveData();
+ }catch(e){say("Simpanan gagal. Ruang penyimpanan mungkin penuh.");}
+}
+function restoreProgress(){
+ try{
+  const s=settings.save;
+  if(!s||!Array.isArray(s.docs)||!Number.isFinite(s.time))return false;
+  initGame();
+  if(!validTile(s.x,s.y))return false;
+  game.x=s.x;game.y=s.y;
+  game.docs=s.docs.filter(x=>["doc1","doc2","doc3"].includes(x));
+  game.key=!!s.key;game.time=Math.max(0,Math.min(MAX_TIME,s.time));
+  game.items.forEach(i=>i.taken=s.items?.find(v=>v.id===i.id)?.taken===true);
+  return true;
+ }catch(e){return false;}
+}
+function endGame(win){
+ game.finished=true;
+ setState(win?"win":"gameover");
+ if(win){
+  settings.best=Math.max(settings.best,Math.round(game.time));
+  saveData();
+ }
+ showDialog(win?"win":"gameover");
+}
+function showDialog(type){
+ const content=$("dialogContent");
+ if(type==="paused"){
+  content.innerHTML=`<div class="eyebrow">Permainan dijeda</div>
+  <h2>Berhenti sejenak.</h2>
+  <p>Waktu dan seluruh simulasi berhenti selama jeda.</p>
+  <div class="actions">
+  <button class="btn primary" id="resumeBtn">LANJUTKAN</button>
+  <button class="btn" id="restartBtn">MULAI ULANG</button>
+  <button class="btn" id="exitBtn">KEMBALI KE MENU</button></div>`;
+ }else if(type==="win"){
+  content.innerHTML=`<div class="eyebrow">Berkas ditutup</div>
+  <h2>Kamu berhasil keluar.</h2>
+  <p>Ketiga dokumen telah ditemukan. Namun satu hal masih belum terjawab: siapa yang menyalakan lampu lantai tiga?</p>
+  <p>Waktu tersisa: <strong>${formatTime(game.time)}</strong></p>
+  <div class="actions"><button class="btn primary" id="againBtn">MAIN LAGI</button><button class="btn" id="exitBtn">MENU UTAMA</button></div>`;
+ }else{
+  content.innerHTML=`<div class="eyebrow">Laporan berakhir</div>
+  <h2>Waktu telah habis.</h2>
+  <p>Bangunan kembali gelap. Dokumen yang belum ditemukan tetap menjadi rahasia.</p>
+  <div class="actions"><button class="btn primary" id="againBtn">COBA LAGI</button><button class="btn" id="exitBtn">MENU UTAMA</button></div>`;
+ }
+ $("modal").classList.remove("hidden");
+ bindDialog();
+}
+function bindDialog(){
+ const resume=$("resumeBtn"),restart=$("restartBtn"),exit=$("exitBtn"),again=$("againBtn");
+ if(resume)resume.onclick=()=>{$("modal").classList.add("hidden");setState("playing");};
+ if(restart)restart.onclick=()=>{$("modal").classList.add("hidden");startGame();};
+ if(exit)exit.onclick=goMenu;
+ if(again)again.onclick=()=>{$("modal").classList.add("hidden");startGame();};
+}
+function startGame(){
+ try{
+  clearTimeout(messageTimer);
+  initGame();
+  $("modal").classList.add("hidden");
+  setState("playing");
+  started=true;
+  saveProgress();
+  say("Kamu berada di ruang arsip. Cari tiga dokumen dan kartu akses.");
+  render();
+ }catch(e){showError(e);}
+}
+function goMenu(){
+ $("modal").classList.add("hidden");
+ clearTimeout(messageTimer);
+ setState("menu");
+}
+function pause(){
+ if(state==="playing"){
+  setState("paused");showDialog("paused");
+ }
+}
+function requestWake(){
+ try{
+  if("wakeLock"in navigator)navigator.wakeLock.request("screen").then(w=>wakeLock=w).catch(()=>{});
+ }catch(e){}
+}
+function releaseWake(){
+ try{if(wakeLock){wakeLock.release();wakeLock=null;}}catch(e){}
+}
+function toggleFullscreen(){
+ try{
+  if(!document.fullscreenElement){
+   const p=document.documentElement.requestFullscreen?.();
+   if(p)p.catch(()=>say("Mode layar penuh tidak tersedia di browser ini."));
+  }else document.exitFullscreen?.();
+ }catch(e){say("Browser tidak mengizinkan layar penuh.");}
+}
+function resizeCanvas(){
+ const ratio=Math.min(window.devicePixelRatio||1,2);
+ const rect=canvas.getBoundingClientRect();
+ if(rect.width<=0)return;
+ const width=COLS*TILE,height=ROWS*TILE;
+ canvas.width=Math.round(width*ratio);
+ canvas.height=Math.round(height*ratio);
+ ctx.setTransform(1,0,0,1,0,0);
+ ctx.scale(ratio,ratio);
+ canvas.style.aspectRatio=width+"/"+height;
+ if(game)render();
+}
+function showError(e){
+ $("errorText").textContent="Permainan mengalami masalah: "+(e.message||"Kesalahan tidak diketahui")+". Kembali ke menu untuk memulai ulang.";
+ $("errorBanner").classList.remove("hidden");
+ stopLoop();releaseWake();state="menu";
+}
+function startDirection(e){
+ const dir=e.currentTarget.dataset.dir;
+ if(!dir)return;
+ e.preventDefault();
+ pointerIds.set(e.pointerId,dir);
+ try{e.currentTarget.setPointerCapture(e.pointerId);}catch(err){}
+ move(dir);
+}
+function releaseDirection(e){
+ pointerIds.delete(e.pointerId);
+}
+document.querySelectorAll("[data-dir]").forEach(btn=>{
+ btn.addEventListener("pointerdown",startDirection);
+ btn.addEventListener("pointerup",releaseDirection);
+ btn.addEventListener("pointercancel",releaseDirection);
+ btn.addEventListener("pointerleave",releaseDirection); // FIX: Tambahan agar berhenti jika jari keluar tombol
+ btn.addEventListener("lostpointercapture",releaseDirection);
+});
+window.addEventListener("keydown",e=>{
+ if(["ArrowUp","ArrowDown","ArrowLeft","ArrowRight"," "].includes(e.key))e.preventDefault();
+ if(e.repeat)return;
+ if(e.key==="Escape"||e.key.toLowerCase()==="p"){
+  if(state==="playing")pause();
+  else if(state==="paused"){$("modal").classList.add("hidden");setState("playing");}
+  return;
+ }
+ if(e.key.toLowerCase()==="m"){settings.sfx=!settings.sfx;saveData();say(settings.sfx?"Suara aktif":"Suara dimatikan");return;}
+ if(e.key.toLowerCase()==="f"){toggleFullscreen();return;}
+ if(e.key.toLowerCase()==="r"&&state==="playing"){
+  if(confirm("Mulai ulang permainan dari awal?"))startGame();
+  return;
+ }
+ const dirs={ArrowUp:"up",w:"up",ArrowDown:"down",s:"down",ArrowLeft:"left",a:"left",ArrowRight:"right",d:"right"};
+ if(dirs[e.key]||dirs[e.key.toLowerCase()])move(dirs[e.key]||dirs[e.key.toLowerCase()]);
+ if(e.key==="Enter"||e.key.toLowerCase()==="e")interact();
+});
+$("startBtn").onclick=startGame;
+$("continueBtn").onclick=()=>{
+ if(restoreProgress()){
+  setState("playing");render();
+  say("Simpanan berhasil dipulihkan.");
+ }else say("Simpanan tidak ditemukan atau rusak. Mulai permainan baru.");
+};
+$("pauseBtn").onclick=pause;
+$("interactBtn").onclick=interact;
+$("fullBtn").onclick=toggleFullscreen;
+$("howBtn").onclick=()=>{
+ $("dialogContent").innerHTML=`<div class="eyebrow">Panduan penjaga</div><h2>Cara bermain</h2>
+ <p>1. Jelajahi rumah sakit menggunakan tombol arah atau WASD.</p>
+ <p>2. Temukan tiga dokumen rahasia dan kartu akses.</p>
+ <p>3. Pergi ke pintu keluar di ujung lorong utara.</p>
+ <p>4. Gunakan tombol PERIKSA atau E untuk memeriksa pintu.</p>
+ <p><strong>Keyboard:</strong> Panah/WASD bergerak, E/Enter periksa, P/Esc jeda, M suara, F layar penuh, R mulai ulang.</p>
+ <div class="actions"><button class="btn primary" id="closeDialog">MENGERTI</button></div>`;
+ $("modal").classList.remove("hidden");
+ $("closeDialog").onclick=()=>$("modal").classList.add("hidden");
+};
+$("settingsBtn").onclick=()=>{
+ $("dialogContent").innerHTML=`<div class="eyebrow">Preferensi</div><h2>Pengaturan</h2>
+ <div class="setting"><label for="sfx">Efek suara</label><input id="sfx" type="checkbox" ${settings.sfx?"checked":""}></div>
+ <div class="setting"><label for="difficulty">Kesulitan</label><select id="difficulty"><option value="normal">Normal</option><option value="easy">Santai</option></select></div>
+ <p class="note">Mode santai memberikan waktu bermain lebih panjang.</p>
+ <div class="actions"><button class="btn primary" id="saveSettings">SIMPAN PENGATURAN</button>
+ <button class="btn" id="resetData">HAPUS SEMUA SIMPANAN</button>
+ <button class="btn" id="closeDialog">KEMBALI</button></div>`;
+ $("modal").classList.remove("hidden");
+ $("saveSettings").onclick=()=>{
+  settings.sfx=$("sfx").checked;
+  settings.difficulty=$("difficulty").value;
+  // FIX: Update MAX_TIME secara dinamis saat pengaturan disimpan
+  MAX_TIME = settings.difficulty === "easy" ? 420 : 300; 
+  $("modal").classList.add("hidden");
+  say("Pengaturan berhasil disimpan.");
+  saveData();
+ };
+ $("difficulty").value=settings.difficulty;
+ $("resetData").onclick=()=>{
+  if(confirm("Hapus seluruh progres dan pengaturan?")){
+   settings={...DEFAULTS};
+   MAX_TIME = 300; // Reset waktu
+   saveData();
+   $("continueBtn").disabled=true; // FIX: Matikan tombol lanjutkan
+   $("modal").classList.add("hidden");
+   say("Semua data berhasil diatur ulang.");
+  }
+ };
+ $("closeDialog").onclick=()=>$("modal").classList.add("hidden");
+};
+$("errorReload").onclick=()=>{
+ $("errorBanner").classList.add("hidden");
+ goMenu();
+};
+canvas.addEventListener("contextmenu",e=>e.preventDefault());
+canvas.addEventListener("dragstart",e=>e.preventDefault());
+canvas.addEventListener("pointerdown",()=>{try{if(audio&&audio.state==="suspended")audio.resume();}catch(e){}});
+window.addEventListener("blur",()=>{if(state==="playing")pause();});
+document.addEventListener("visibilitychange",()=>{
+ if(document.hidden){if(state==="playing")pause();if(audio)audio.suspend().catch(()=>{});}
+ else if(audio)audio.resume().catch(()=>{});
+});
+window.addEventListener("resize",()=>{
+ clearTimeout(resizeTimer);
+ resizeTimer=setTimeout(()=>{resizeCanvas();},180);
+});
+if(window.visualViewport)window.visualViewport.addEventListener("resize",()=>{
+ clearTimeout(resizeTimer);
+ resizeTimer=setTimeout(resizeCanvas,180);
+});
+window.addEventListener("popstate",()=>{
+ if(state==="playing")pause();
+ history.pushState({game:true},"",location.href);
+});
+history.pushState({game:true},"",location.href);
+window.addEventListener("beforeunload",e=>{
+ if(started&&state==="playing"){e.preventDefault();e.returnValue="";}
+});
+window.addEventListener("orientationchange",resizeCanvas);
+window.addEventListener("pagehide",()=>{
+ stopLoop();releaseWake();
+ if(audio)audio.suspend().catch(()=>{});
+});
+
+loadData();
+resizeCanvas();
+$("continueBtn").disabled=!settings.save;
+
+if(!settings.onboarded){
+ $("dialogContent").innerHTML=`<div class="eyebrow">Petunjuk pertama</div><h2>Jaga langkahmu.</h2>
+ <p>Rumah sakit ini menyimpan tiga dokumen dan satu kartu akses. Kamu punya waktu terbatas untuk menemukannya.</p>
+ <p>Gunakan tombol arah. Setiap lorong menyimpan sesuatu yang mungkin tidak ingin kamu temukan.</p>
+ <div class="actions"><button class="btn primary" id="onboardDone">MULAI MENJELAJAH</button><button class="btn" id="skipOnboard">LEWATI</button></div>`;
+ $("modal").classList.remove("hidden");
+ $("onboardDone").onclick=$("skipOnboard").onclick=()=>{
+  settings.onboarded=true;saveData();
+  $("modal").classList.add("hidden");
+ };
+}
+})();
+</script>
+</body>
+</html>
